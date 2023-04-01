@@ -1,0 +1,14 @@
+.app-input {
+    font-size: 18px;
+    padding: 12px 24px;
+    margin: 8px 0;
+    border-radius: 4px;
+    background-color: #ecf1fd;
+    color: #333333;
+    border: none;
+    width: 400px;
+    box-sizing: border-box;
+    text-align: center;
+    outline: 2px solid #abc6fd; /* Add a 2px outline with the same color */
+    outline-offset: 2px; /* Add a 2px offset */
+}

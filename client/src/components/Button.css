@@ -1,0 +1,19 @@
+.app-btn {
+    font-size: 18px;
+    padding: 12px 24px;
+    margin: 8px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #febc04;
+    color: #333333;
+    border: none;
+    width: 400px;
+    box-sizing: border-box;
+    outline: 2px solid #aeb296;
+    outline-offset: 2px;
+}
+
+.app-btn:hover {
+    background-color: #d9a103;
+    transition: background-color 0.2s ease;
+}
