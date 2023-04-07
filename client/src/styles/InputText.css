@@ -12,3 +12,11 @@
     outline: 2px solid #abc6fd; /* Add a 2px outline with the same color */
     outline-offset: 2px; /* Add a 2px offset */
 }
+
+.app-input-small {
+    width: 100%;
+    padding: 4px 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  

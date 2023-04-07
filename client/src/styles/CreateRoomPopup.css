@@ -1,0 +1,66 @@
+.create-room-popup-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+  
+.create-room-popup {
+    background-color: white;
+    width: 70%;
+    max-width: 800px;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.create-room-popup h2 {
+    margin-top: 0;
+    color: black;
+}
+
+.create-room-popup table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.create-room-popup th, .create-room-popup td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.create-room-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.create-room-table {
+    width: 100%;
+    table-layout: fixed;
+}
+  
+.create-room-table td {
+    word-wrap: break-word;
+    padding: 0.25rem;
+}
+
+.table-container {
+    overflow-y: auto;
+    max-height: calc(80vh - 70px); /* Subtract the estimated height of the title and the button */
+}
+
+.warning-message {
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+  }
+  

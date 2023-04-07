@@ -1,17 +1,19 @@
 import React from 'react';
-import './App.css';
-import Main from './components/Main';
-import Profile from './components/Profile'
-import logo from './assets/small_logo.png'
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import './styles/App.css';
+import HomePage from './pages/HomePage';
+import WaitingRoom from "./pages/WaitingRoom";
+import Header from './layout/Header';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} alt="App Logo" className="header-logo" />
-        <Profile />
-      </header>
-      <Main />
+      <Router>
+        <Routes>
+          <Route path="/" element={<><Header showProfile /><HomePage /></>} />
+          <Route path="/waitingroom" element={<><Header /><WaitingRoom /></>} />
+        </Routes>
+      </Router>
     </div>
   );
 }
