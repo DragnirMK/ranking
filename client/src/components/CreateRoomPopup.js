@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import '../styles/CreateRoomPopup.css';
 import InputText from './InputText';
 import Button from './Button';
 import socket from '../setupSocket';
-import { AuthContext, AuthContextProvider } from '../components/AuthContext';
+import { AuthContext } from '../components/AuthContext';
 
 const CreateRoomPopup = ({ onClose }) => {
   const [rows, setRows] = useState([{ name: '', link: '' }]);

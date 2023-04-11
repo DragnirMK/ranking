@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import '../styles/HomePage.css';
 import Button from '../components/Button';
 import InputText from '../components/InputText';
 import CreateRoomPopup from '../components/CreateRoomPopup';
 import socket from '../setupSocket';
-import { AuthContext, AuthContextProvider } from '../components/AuthContext';
+import { AuthContext } from '../components/AuthContext';
 
 function HomePage() {
   const [pinCode, setPinCode] = useState('');
-  const { loggedIn, setLoggedIn, user, setUser } = useContext(AuthContext);
+  const { loggedIn, user } = useContext(AuthContext);
   const [showCreateRoomPopup, setShowCreateRoomPopup] = useState(false);
 
   const navigate = useNavigate();

@@ -4,9 +4,9 @@ const Room = require('../models/room');
 const logSocketsInRoom = async (io, roomID) => {
   try {
     const clients = await io.in(roomID).allSockets();
-    console.log(`Sockets in room ${roomID}:`, Array.from(clients));
+    logger.info(`Sockets in room ${roomID}:`, Array.from(clients));
   } catch (error) {
-    console.error('Error:', error);
+    logger.info('Error:', error);
   }
 };
 

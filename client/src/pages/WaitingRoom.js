@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import '../styles/WaitingRoom.css';
 import { useLocation } from 'react-router-dom';
 import socket from '../setupSocket';
-import { AuthContext, AuthContextProvider } from '../components/AuthContext'
+import { AuthContext } from '../components/AuthContext'
 
 const WaitingRoom = () => {
   const location = useLocation();
