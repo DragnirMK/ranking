@@ -15,16 +15,30 @@ const CreateRoomPopup = ({ onClose }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-      const handleClickOutside = (event) => {
-          if (popupRef.current && !popupRef.current.contains(event.target)) {
-              onClose();
-          }
-      };
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-          document.removeEventListener('mousedown', handleClickOutside);
-      };
+    const handleClickOutside = (event) => {
+        if (popupRef.current && !popupRef.current.contains(event.target)) {
+            onClose();
+        }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, [onClose]);
+
+  // Handle socket events
+  useEffect(() => {
+    socket.on('roomCreated', (data) => {
+      console.log("roomCreated event received, room is properly created in the database.")
+      console.log("Navigate to /waitingroom")
+      navigate('/waitingroom', { state: { pinCode: data.pinCode } });
+    });
+
+    // Clean up the event listeners when the component is unmounted
+    return () => {
+      socket.off('roomCreated');
+    };
+  });
 
   const handleChange = (e, index, field) => {
       const newRow = { ...rows[index], [field]: e.target.value };
@@ -77,9 +91,7 @@ const CreateRoomPopup = ({ onClose }) => {
           const data = await res.json();
           console.log('Room created in database:', data);
     
-          // socket.emit('joinRoom', data.pinCode, user.id);
-          
-          navigate('/waitingroom', { state: { pinCode: data.pinCode } });
+          socket.emit('createRoom', data.pinCode, user.id);
         } catch (error) {
           console.error('Error creating room:', error);
         }

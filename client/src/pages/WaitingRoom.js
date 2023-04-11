@@ -8,63 +8,47 @@ const WaitingRoom = () => {
   const location = useLocation();
   const { user } = useContext(AuthContext);
 
-  const [loading, setLoading] = useState(true);
   const [players, setPlayers] = useState([]);
   const [numPlayers, setNumPlayers] = useState(0);
 
   const pinCode  = location?.state?.pinCode || null;
 
+  // Handle joinRoom event (when joining / refreshing the page)
   useEffect(() => {
     if (!pinCode || !user) {
       return;
     }
+  
+    console.log(user);
+    console.log(pinCode);
+  
+    socket.emit('joinRoom', pinCode, user.id);
+  }, [pinCode, user]);
 
-    console.log(players)
-
-    const handlePlayerJoined = (data) => {
-      console.log('Player joined:', data);
+  // Handle socket events
+  useEffect(() => {
+    socket.on('playerJoined', (data) => {
+      console.log('playerJoined event received:', data);
       setPlayers(data.players);
       setNumPlayers(data.numPlayers);
-    };
-
-    const handlePlayerLeft = (data) => {
-      console.log('Player left:', data);
+    });
+  
+    socket.on('playerLeft', (data) => {
+      console.log('playerLeft event received:', data);
       setPlayers(data.players);
       setNumPlayers(data.numPlayers);
-    };
-
-    socket.on('connect', () => {
-      console.log('Connected to socket');
-      socket.emit('joinRoom', pinCode, user.id);
     });
 
-    socket.on('playerJoined', handlePlayerJoined);
-
-    socket.on('playerLeft', handlePlayerLeft);
-
-    socket.on('disconnect', () => {
-      console.log('Disconnected from socket');
-    });
-
-    setLoading(false);
-
+     // Clean up the event listeners when the component is unmounted
     return () => {
-      socket.off('playerJoined', handlePlayerJoined);
-      socket.off('playerLeft', handlePlayerLeft);
+      socket.off('playerJoined');
+      socket.off('playerLeft');
     };
-  }, [pinCode, user, players]);
+  });
 
   const handleStart = () => {
     socket.emit('startGame');
   };
-
-  if (loading || !user) {
-    return <div>Loading...</div>;
-  }
-
-  if (!pinCode) {
-    return <div>Error</div>;
-  }
 
   return (
     <div className="waiting-room-background">

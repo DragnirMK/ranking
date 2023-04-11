@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Outlet, useNavigate } from "react-router-dom";
 import '../styles/HomePage.css';
 import Button from '../components/Button';
@@ -14,6 +14,20 @@ function HomePage() {
 
   const navigate = useNavigate();
 
+  // Handle socket events
+  useEffect(() => {
+    socket.on('playerJoined', (data) => {
+      console.log("playerJoined event received, room is opened.")
+      console.log("Navigate to /waitingroom")
+      console.log(pinCode)
+      navigate('/waitingroom', { state: { pinCode: pinCode } });
+    });
+
+    return () => {
+      socket.off('playerJoined');
+    };
+  }, [navigate, pinCode]);
+
   const handleCreateRoom = () => {
     setShowCreateRoomPopup(true);
   };
@@ -27,8 +41,7 @@ function HomePage() {
   };
 
   const handleJoinRoom = () => {
-    // socket.emit('joinRoom', pinCode, user.id);
-    navigate('/waitingroom', { state: { pinCode: pinCode } });
+    socket.emit('joinRoom', pinCode, user.id);
   };
 
   return (
