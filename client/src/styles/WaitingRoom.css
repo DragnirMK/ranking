@@ -1,12 +1,23 @@
-.waiting-room {
-    text-align: center;
+.waiting-room-background {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px 150px;
+    box-sizing: border-box;
+}
+  
+.waiting-room-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
 }
 
 .player-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
+    justify-content: flex-start;
+    gap: 40px;
 }
 
 .player {
@@ -29,4 +40,25 @@
 .copy-button, .start-button {
     margin: 10px;
 }
+
+.players-count-container {
+    width: 100%;
+}
+
+.players-count {
+    text-align: left;
+    color: white;
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.action-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 60px;
+    margin-top: 200px;
+}
+
   

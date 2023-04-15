@@ -77,15 +77,14 @@ const CreateRoomPopup = ({ onClose }) => {
 
       if (!invalidRow) {
         try {
-          const res = await fetch('/api/rooms/create-room', {
+          const res = await fetch('/api/rooms/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               rows,
-              createdBy: user.id,
-              socketId: socket.id
+              createdBy: user.id
             })
           });
           const data = await res.json();

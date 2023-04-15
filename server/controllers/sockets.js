@@ -6,7 +6,7 @@ const logSocketsInRoom = async (io, roomID) => {
     const clients = await io.in(roomID).allSockets();
     logger.info(`Sockets in room ${roomID}:`, Array.from(clients));
   } catch (error) {
-    logger.info('Error:', error);
+    logger.error('Error:', error);
   }
 };
 
@@ -22,16 +22,14 @@ const getUserData = async (room) => {
       id: player.user._id,
       username: player.user.username,
       profilePicture: player.user.profilePicture
-    },
-    score: player.score,
-    socketId: player.socketId
+    }
   }));
 
   return players
 }
 
-const handleCreateRoom = async (io, socket, pinCode, guestId) => {
-  logger.info(`Player ${guestId} created room with PIN code ${pinCode}`);
+const handleCreateRoom = async (io, socket, pinCode, userId) => {
+  logger.info(`Player ${userId} created room with PIN code ${pinCode}`);
 
   const room = await Room.findOne({ 'pinCode': pinCode });
 
@@ -39,6 +37,9 @@ const handleCreateRoom = async (io, socket, pinCode, guestId) => {
     logger.info("No room found")
     return;
   }
+
+  socket.pinCode = room.pinCode
+  socket.userId = userId
 
   socket.join(room.pinCode);
 
@@ -49,8 +50,8 @@ const handleCreateRoom = async (io, socket, pinCode, guestId) => {
   io.to(room.pinCode).emit('roomCreated', { pinCode: pinCode });
 }
 
-const handleJoinRoom = async (io, socket, pinCode, guestId) => {
-  logger.info(`Player ${guestId} joined room with PIN code ${pinCode}`);
+const handleJoinRoom = async (io, socket, pinCode, userId) => {
+  logger.info(`Player ${userId} joined room with PIN code ${pinCode}`);
 
   const room = await Room.findOne({ 'pinCode': pinCode });
 
@@ -59,32 +60,41 @@ const handleJoinRoom = async (io, socket, pinCode, guestId) => {
     return;
   }
 
+  socket.pinCode = room.pinCode
+  socket.userId = userId
+
   socket.join(room.pinCode);
 
   await logSocketsInRoom(io, room.pinCode);
 
-  const playerIndex = room.players.findIndex((player) => player.user.toString() === guestId);
+  const playerIndex = room.players.findIndex((player) => player.user.toString() === userId);
   if (playerIndex === -1) {
-    logger.info(`Player ${guestId} is a new user.`);
-    room.players.push({user: guestId, socketId: socket.id});
+    logger.info(`Player ${userId} is a new user.`);
+    room.players.push({user: userId});
     await room.save();
   } else {
-    logger.info(`Player ${guestId} is already registered.`);
-    room.players[playerIndex].socketId = socket.id;
-    await room.save();
+    logger.info(`Player ${userId} is already registered.`);
   }
 
   const players = await getUserData(room)
 
   logger.info("Sending playerJoined event")
 
-  io.to(room.pinCode).emit('playerJoined', { players: players, numPlayers: players.length });
+  io.to(room.pinCode).emit('playerJoined', { players: players, numPlayers: players.length, createdBy: room.createdBy });
 }
 
 const handleDisconnection = async (io, socket) => {
   logger.info('User disconnecting:', socket.id);
 
-  const room = await Room.findOne({ 'players.socketId': socket.id });
+  const pinCode = socket.pinCode;
+  const userId = socket.userId;
+
+  if (!pinCode || !userId) {
+    logger.info("No pinCode or userId found on the socket.")
+    return;
+  }
+
+  const room = await Room.findOne({ 'pinCode': pinCode });
   if (!room) {
     logger.info("No room found")
     return;
@@ -92,7 +102,7 @@ const handleDisconnection = async (io, socket) => {
 
   await logSocketsInRoom(io, room.pinCode);
   
-  const playerIndex = room.players.findIndex((player) => player.socketId === socket.id);
+  const playerIndex = room.players.findIndex((player) => player.user.toString() === userId);
   if (playerIndex !== -1) {
     room.players.splice(playerIndex, 1);
     await room.save();
@@ -109,12 +119,12 @@ const setupSocketEvents = (io) => {
   io.on('connection', (socket) => {
     logger.info(`Socket ${socket.id} connected`);
 
-    socket.on('createRoom', async (pinCode, guestId) => {
-      await handleCreateRoom(io, socket, pinCode, guestId)
+    socket.on('createRoom', async (pinCode, userId) => {
+      await handleCreateRoom(io, socket, pinCode, userId)
     });
 
-    socket.on('joinRoom', async (pinCode, guestId) => {
-      await handleJoinRoom(io, socket, pinCode, guestId)
+    socket.on('joinRoom', async (pinCode, userId) => {
+      await handleJoinRoom(io, socket, pinCode, userId)
     });
 
     socket.on('disconnecting', async() => {

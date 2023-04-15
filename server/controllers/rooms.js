@@ -2,15 +2,19 @@ const logger = require('../utils/logger')
 const roomsRouter = require('express').Router();
 const Room = require('../models/room');
 
-roomsRouter.post('/create-room', async (request, response) => {
-  const { rows, createdBy, socketId } = request.body;
+const deleteAllRooms = async () => {
+  return await Room.deleteMany({});
+};
+
+roomsRouter.post('/', async (request, response) => {
+  const { rows, createdBy } = request.body;
   const pinCode = Math.floor(1000 + Math.random() * 9000);
 
   const newRoom = new Room({
     rows,
     pinCode,
     createdBy,
-    players: [{ user: createdBy, socketId }],
+    players: [{ user: createdBy }],
   });
 
   try {
@@ -44,4 +48,4 @@ roomsRouter.get('/:id', async (request, response) => {
   }
 });
 
-module.exports = roomsRouter;
+module.exports = { roomsRouter, deleteAllRooms };

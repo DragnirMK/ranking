@@ -2,7 +2,10 @@ import React, { useEffect, useState, useContext } from 'react';
 import '../styles/WaitingRoom.css';
 import { useLocation } from 'react-router-dom';
 import socket from '../setupSocket';
-import { AuthContext } from '../components/AuthContext'
+import { AuthContext } from '../components/AuthContext';
+import Player from '../components/Player';
+import PinCode from '../components/PinCode'
+import Button from '../components/Button';
 
 const WaitingRoom = () => {
   const location = useLocation();
@@ -10,6 +13,7 @@ const WaitingRoom = () => {
 
   const [players, setPlayers] = useState([]);
   const [numPlayers, setNumPlayers] = useState(0);
+  const [createdBy, setCreatedBy] = useState("")
 
   const pinCode  = location?.state?.pinCode || null;
 
@@ -31,6 +35,7 @@ const WaitingRoom = () => {
       console.log('playerJoined event received:', data);
       setPlayers(data.players);
       setNumPlayers(data.numPlayers);
+      setCreatedBy(data.createdBy)
     });
   
     socket.on('playerLeft', (data) => {
@@ -46,38 +51,47 @@ const WaitingRoom = () => {
     };
   });
 
-  const handleStart = () => {
-    socket.emit('startGame');
+  const handleStart = (user) => {
+    if (isHost(user)) {
+      socket.emit('startGame');
+    }
+  };
+
+  const isHost = (user) => {
+    console.log("isHost")
+    console.log(user)
+    console.log(createdBy)
+    return user.id === createdBy;
   };
 
   return (
     <div className="waiting-room-background">
       <div className="waiting-room-container">
-        <h2>Waiting Room</h2>
-        <div className="waiting-room-header">
-          <div className="players-count-container">
-            <div className="players-count">{`Players ${numPlayers}/12`}</div>
-          </div>
+        <div className="players-count-container">
+          <div className="players-count">{`Players ${numPlayers}/12`}</div>
         </div>
-        <div className="waiting-room-content">
-          <div className="players-list-container">
-            <h3>Players</h3>
-            <ul className="players-list">
-              {players && players.map((player) => (
-                <li key={player.user.id}>
-                  <img src={player.user.profilePicture} alt={`${player.user.username}'s profile`} />
-                  <span>{player.user.username}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="start-button-container">
-            {numPlayers >= 2 && <button className="start-button" onClick={handleStart}>Start</button>}
-          </div>
+        <div className="player-list">
+          {players &&
+            players.map((player) => (
+              <Player key={player.user.id} player={player} isHost={isHost(player.user)} />
+            ))}
+        </div>
+        <div className="action-container">
+          {players && user && (
+            <>
+              <PinCode pinCode={pinCode} />
+              <Button
+                className="start-button"
+                text="Start"
+                onClick={() => handleStart(user)}
+                disabled={numPlayers < 2}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export default WaitingRoom;

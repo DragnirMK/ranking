@@ -17,3 +17,19 @@
     background-color: #d9a103;
     transition: background-color 0.2s ease;
 }
+
+.app-btn-copy {
+    width: auto;
+    padding: 12px 16px; /* Adjust the padding to control the width */
+}
+
+.app-btn-disabled {
+    background-color: #cccccc;
+    color: #999999;
+    cursor: not-allowed;
+}
+  
+.app-btn-disabled:hover {
+    background-color: #cccccc;
+    transition: none;
+}

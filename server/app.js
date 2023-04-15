@@ -7,7 +7,7 @@ const { Server } = require('socket.io');
 const setupSocketEvents = require('./controllers/sockets');
 
 const usersRouter = require('./controllers/users');
-const roomsRouter = require('./controllers/rooms');
+const { roomsRouter } = require('./controllers/rooms');
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 

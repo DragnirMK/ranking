@@ -1,0 +1,18 @@
+.pincode-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 270px;
+    height: 80px;
+    background-color: white;
+    border-radius: 5px;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.pincode-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+  
