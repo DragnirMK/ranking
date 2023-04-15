@@ -83,7 +83,7 @@ const CreateRoomPopup = ({ onClose }) => {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              rows,
+              videos: rows,
               createdBy: user.id
             })
           });

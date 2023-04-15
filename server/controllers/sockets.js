@@ -60,6 +60,11 @@ const handleJoinRoom = async (io, socket, pinCode, userId) => {
     return;
   }
 
+  if (room.players.length === 12) {
+    logger.info("Room if full.")
+    return;
+  }
+
   socket.pinCode = room.pinCode
   socket.userId = userId
 

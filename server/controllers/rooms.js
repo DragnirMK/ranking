@@ -7,14 +7,23 @@ const deleteAllRooms = async () => {
 };
 
 roomsRouter.post('/', async (request, response) => {
-  const { rows, createdBy } = request.body;
+  const { videos, createdBy } = request.body;
   const pinCode = Math.floor(1000 + Math.random() * 9000);
 
+  const initialScores = {
+    user: createdBy,
+    videoScores: videos.map((_, index) => ({
+      videoIndex: index,
+      score: -1,
+    })),
+  };
+
   const newRoom = new Room({
-    rows,
+    videos,
     pinCode,
     createdBy,
     players: [{ user: createdBy }],
+    scores: [initialScores],
   });
 
   try {
@@ -25,6 +34,7 @@ roomsRouter.post('/', async (request, response) => {
     response.status(500).send({ error: 'Error creating game' });
   }
 });
+
 
 roomsRouter.get('/', async (req, res) => {
   try {
