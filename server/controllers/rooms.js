@@ -10,20 +10,11 @@ roomsRouter.post('/', async (request, response) => {
   const { videos, createdBy } = request.body;
   const pinCode = Math.floor(1000 + Math.random() * 9000);
 
-  const initialScores = {
-    user: createdBy,
-    videoScores: videos.map((_, index) => ({
-      videoIndex: index,
-      score: -1,
-    })),
-  };
-
   const newRoom = new Room({
     videos,
     pinCode,
     createdBy,
-    players: [{ user: createdBy }],
-    scores: [initialScores],
+    connectedUsers: [{ user: createdBy }]
   });
 
   try {
@@ -50,7 +41,7 @@ roomsRouter.get('/:id', async (request, response) => {
   const { id } = request.params;
 
   try {
-    const room = await Room.findById(id).populate('players.user', { username: 1, profilePicture: 1 });
+    const room = await Room.findById(id).populate('connectedUsers.user', { username: 1, profilePicture: 1 });
     response.json(room.toJSON());
   } catch (error) {
     logger.error('Error getting game:', error);

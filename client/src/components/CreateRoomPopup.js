@@ -7,7 +7,7 @@ import socket from '../setupSocket';
 import { AuthContext } from '../components/AuthContext';
 
 const CreateRoomPopup = ({ onClose }) => {
-  const [rows, setRows] = useState([{ name: '', link: '' }]);
+  const [rows, setRows] = useState([{ title: '', url: '' }]);
   const [warning, setWarning] = useState(null);
   const popupRef = useRef();
 
@@ -53,7 +53,7 @@ const CreateRoomPopup = ({ onClose }) => {
       }
   };
 
-  const isValidYouTubeLink = (url) => {
+  const isValidYouTubeURL = (url) => {
       const youtubeRegex = /^(https?:\/\/)?(www\.)?((youtu(be)?\.com)|(youtu\.be))\/.+/;
       return youtubeRegex.test(url);
   };
@@ -64,13 +64,13 @@ const CreateRoomPopup = ({ onClose }) => {
 
       for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
-        if (!isValidYouTubeLink(row.link)) {
-          setWarning(`Row number ${i + 1} has an invalid YouTube link`);
+        if (!isValidYouTubeURL(row.url)) {
+          setWarning(`Row number ${i + 1} has an invalid YouTube url`);
           invalidRow = true;
           break;
         }
-        if (row.name === '') {
-          setWarning(`Row number ${i + 1} has an invalid name`);
+        if (row.title === '') {
+          setWarning(`Row number ${i + 1} has an invalid title`);
           break;
         }
       }
@@ -120,8 +120,8 @@ const CreateRoomPopup = ({ onClose }) => {
             <table className="create-room-table">
                 <thead>
                     <tr style={{ backgroundColor: '#FFC600', color: 'black' }}>
-                    <th>Name</th>
-                    <th>Link (YouTube)</th>
+                    <th>Title</th>
+                    <th>URL (YouTube)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -129,16 +129,16 @@ const CreateRoomPopup = ({ onClose }) => {
                     <tr key={index}>
                         <td>
                         <InputText
-                            value={row.name}
-                            onChange={(e) => handleChange(e, index, 'name')}
+                            value={row.title}
+                            onChange={(e) => handleChange(e, index, 'title')}
                             onKeyDown={handleKeyPress}
                             size="small"
                         />
                         </td>
                         <td>
                         <InputText
-                            value={row.link}
-                            onChange={(e) => handleChange(e, index, 'link')}
+                            value={row.url}
+                            onChange={(e) => handleChange(e, index, 'url')}
                             onKeyDown={handleKeyPress}
                             size="small"
                         />

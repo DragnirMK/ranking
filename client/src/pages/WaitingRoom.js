@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/WaitingRoom.css';
-import { useLocation } from 'react-router-dom';
 import socket from '../setupSocket';
 import { AuthContext } from '../components/AuthContext';
 import Player from '../components/Player';
@@ -16,6 +16,8 @@ const WaitingRoom = () => {
   const [createdBy, setCreatedBy] = useState("")
 
   const pinCode  = location?.state?.pinCode || null;
+
+  const navigate = useNavigate();
 
   // Handle joinRoom event (when joining / refreshing the page)
   useEffect(() => {
@@ -44,23 +46,27 @@ const WaitingRoom = () => {
       setNumPlayers(data.numPlayers);
     });
 
+    socket.on('gameStarted', (data) => {
+      console.log('gameStarted event received:', data);
+      console.log("Navigate to /ranking")
+      navigate('/ranking', { state: { pinCode: pinCode } });
+    })
+
      // Clean up the event listeners when the component is unmounted
     return () => {
       socket.off('playerJoined');
       socket.off('playerLeft');
+      socket.off('gameStarted');
     };
   });
 
   const handleStart = (user) => {
     if (isHost(user)) {
-      socket.emit('startGame');
+      socket.emit('startGame', pinCode, user.id);
     }
   };
 
   const isHost = (user) => {
-    console.log("isHost")
-    console.log(user)
-    console.log(createdBy)
     return user.id === createdBy;
   };
 

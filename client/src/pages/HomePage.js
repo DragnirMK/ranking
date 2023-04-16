@@ -18,9 +18,14 @@ function HomePage() {
   useEffect(() => {
     socket.on('playerJoined', (data) => {
       console.log("playerJoined event received, room is opened.")
-      console.log("Navigate to /waitingroom")
       console.log(pinCode)
-      navigate('/waitingroom', { state: { pinCode: pinCode } });
+      if (!data.inGame) {
+        console.log("Navigate to /waitingroom")
+        navigate('/waitingroom', { state: { pinCode: pinCode } });
+      } else {
+        console.log("Navigate to /ranking")
+        navigate('/ranking', { state: { pinCode: pinCode } });
+      }
     });
 
     return () => {
@@ -41,7 +46,7 @@ function HomePage() {
   };
 
   const handleJoinRoom = () => {
-    socket.emit('joinRoom', pinCode, user.id);
+    socket.emit('joinRoom', parseInt(pinCode), user.id);
   };
 
   return (

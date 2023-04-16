@@ -1,27 +1,27 @@
 const mongoose = require('mongoose');
 
-const playerSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 const videoSchema = new mongoose.Schema({
-  name: String,
-  link: String,
+  title: String,
+  url: String,
 });
 
-const scoreSchema = new mongoose.Schema({
+const rateSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
-  videoScores: [
+  videoRates: [
     {
       videoIndex: {
         type: Number,
         required: true
       },
-      score: {
+      rate: {
         type: Number,
         default: -1
       }
@@ -32,10 +32,12 @@ const scoreSchema = new mongoose.Schema({
 
 const roomSchema = new mongoose.Schema({
   videos: [videoSchema],
+  currentVideoIndex: { type: Number, default: 0 },
   pinCode: { type: Number, required: true },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  players: [playerSchema],
-  scores: [scoreSchema]
+  connectedUsers: [userSchema],
+  players: [userSchema],
+  rates: [rateSchema]
 });
 
 roomSchema.set('toJSON', {
