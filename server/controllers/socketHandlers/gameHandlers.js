@@ -54,19 +54,26 @@ const handleUpdateGameState = async (io, room) => {
             videoURL: room.videos[room.currentVideoIndex].url
         });
     } else {
-        const averageRatings = room.videos.map((_, index) => {
+        const averageVideos = room.videos.map((video, index) => {
             const rates = room.rates
-            .map((rate) => rate.videoRates.find((videoRate) => videoRate.videoIndex === index))
-            .filter((videoRate) => videoRate && videoRate.rate !== -1)
-            .map((videoRate) => videoRate.rate);
-
+              .map((rate) =>
+                rate.videoRates.find((videoRate) => videoRate.videoIndex === index)
+              )
+              .filter((videoRate) => videoRate && videoRate.rate !== -1)
+              .map((videoRate) => videoRate.rate);
+      
             const average = rates.reduce((sum, rate) => sum + rate, 0) / rates.length;
-            return { videoIndex: index, average };
+            return { title: video.title, url: video.url, videoIndex: index, average };
         });
+
+        const sortedVideos = averageVideos.sort((a, b) => a.average - b.average);
+
+        room.results = sortedVideos;
+        await room.save();
 
         logger.info("Sending gameEnded event")
 
-        io.to(room.pinCode).emit('gameEnded', { averageRatings });
+        io.to(room.pinCode).emit('gameEnded');
     }
 }
 
@@ -90,7 +97,13 @@ const handleFetchGameState = async (io, pinCode, userId) => {
     io.to(room.pinCode).emit('gameState', {
         pinCode,
         createdBy: room.createdBy,
-        players: room.players,
+        players: room.players.map((player) => ({
+            user: {
+                id: player.user._id,
+                username: player.user.username,
+                profilePicture: player.user.profilePicture
+            }
+        })),
         rates: room.rates,
         videoIndex: room.currentVideoIndex,
         videoTitle: room.videos[room.currentVideoIndex].title,
@@ -126,9 +139,9 @@ const handleRatingSubmitted = async (io, pinCode, userId, rating) => {
     if (videoRate.rate == -1) {
         videoRate.rate = parseInt(rating);
         await room.save();
-    
+
         logger.info("Sending playerRated event")
-    
+
         io.to(room.pinCode).emit('playerRated', {rates: room.rates});
     }
 

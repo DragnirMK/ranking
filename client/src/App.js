@@ -4,6 +4,7 @@ import './styles/App.css';
 import HomePage from './pages/HomePage';
 import WaitingRoom from "./pages/WaitingRoom";
 import Ranking from './pages/Ranking'
+import Results from './pages/Results';
 import Header from './layout/Header';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<><Header showProfile /><HomePage /></>} />
           <Route path="/waitingroom" element={<><Header /><WaitingRoom /></>} />
           <Route path="/ranking" element={<><Header /><Ranking /></>} />
+          <Route path="/results" element={<><Header /><Results /></>} />
         </Routes>
       </Router>
     </div>

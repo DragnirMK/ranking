@@ -9,6 +9,13 @@ const videoSchema = new mongoose.Schema({
   url: String,
 });
 
+const resultsSchema = new mongoose.Schema({
+  title: String,
+  url: String,
+  videoIndex: Number,
+  average: Number
+});
+
 const rateSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -32,6 +39,7 @@ const rateSchema = new mongoose.Schema({
 
 const roomSchema = new mongoose.Schema({
   videos: [videoSchema],
+  results: [resultsSchema],
   currentVideoIndex: { type: Number, default: 0 },
   pinCode: { type: Number, required: true },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

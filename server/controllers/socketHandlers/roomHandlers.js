@@ -64,8 +64,6 @@ const handleJoinRoom = async (io, socket, pinCode, userId) => {
 
     const players = await getConnectedUsersData(io, room.pinCode)
 
-    logger.info(players)
-
     logger.info("Sending playerJoined event")
 
     io.to(room.pinCode).emit('playerJoined', { players: players, numPlayers: players.length, createdBy: room.createdBy, inGame });

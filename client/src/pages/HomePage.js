@@ -45,8 +45,20 @@ function HomePage() {
     setPinCode(event.target.value);
   };
 
-  const handleJoinRoom = () => {
-    socket.emit('joinRoom', parseInt(pinCode), user.id);
+  const handleJoinRoom = async () => {
+    const res = await fetch(`/api/rooms/${pinCode}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    const room = await res.json();
+
+    if (room.results.length > 0) {
+      navigate('/results', { state: { pinCode: parseInt(pinCode) } });
+    } else {
+      socket.emit('joinRoom', parseInt(pinCode), user.id);
+    }
   };
 
   return (

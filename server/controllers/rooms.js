@@ -26,22 +26,32 @@ roomsRouter.post('/', async (request, response) => {
 });
 
 
-roomsRouter.get('/', async (req, res) => {
+roomsRouter.get('/', async (request, response) => {
   try {
     const rooms = await Room.find();
-    res.json(rooms);
+    response.json(rooms);
   } catch (err) {
     logger.error(err);
     res.status(500).send('Server Error');
   }
 });
 
-roomsRouter.get('/:id', async (request, response) => {
-  const { id } = request.params;
+roomsRouter.get('/:pinCode', async (request, response) => {
+  const { pinCode } = request.params;
 
   try {
-    const room = await Room.findById(id).populate('connectedUsers.user', { username: 1, profilePicture: 1 });
-    response.json(room.toJSON());
+    let room = await Room.findOne({ 'pinCode': pinCode }).populate('players.user', { password: 0 });
+    const roomObject = room.toObject();
+
+    roomObject.players = roomObject.players.map((player) => ({
+      user: {
+          id: player.user._id,
+          username: player.user.username,
+          profilePicture: player.user.profilePicture
+      }
+    }));
+    logger.info(roomObject.players)
+    response.json(roomObject);
   } catch (error) {
     logger.error('Error getting game:', error);
     response.status(500).send({ error: 'Error getting game' });

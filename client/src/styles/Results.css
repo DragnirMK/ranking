@@ -1,0 +1,6 @@
+.results-button {
+    display: flex;
+    justify-content: center;
+    gap: 200px;
+}
+  

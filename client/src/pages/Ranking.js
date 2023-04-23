@@ -1,22 +1,26 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/Ranking.css';
 import socket from '../setupSocket';
 import { AuthContext } from '../components/AuthContext';
-import PlayerRanking from '../components/PlayerRating';
+import PlayerRating from '../components/PlayerRating';
 import InputText from '../components/InputText';
 import VideoPlayer from '../components/VideoPlayer';
 
 const Ranking = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
   const [players, setPlayers] = useState([]);
+
   const [rates, setRates] = useState([])
+
   const [videoIndex, setVideoIndex] = useState(0);
   const [videoTitle, setVideoTitle] = useState("");
   const [videoURL, setVideoURL] = useState("");
   const [numVideos, setNumVideos] = useState(0)
+
   const [inputValue, setInputValue] = useState('');
   const [inputDisabled, setInputDisabled] = useState(false);
 
@@ -68,6 +72,7 @@ const Ranking = () => {
 
     socket.on('gameEnded', (data) => {
         console.log("gameEnded event received");
+        navigate('/results', { state: { pinCode: pinCode } });
     });
 
     // Clean up the event listeners when the component is unmounted
@@ -88,7 +93,6 @@ const Ranking = () => {
       if (inputValue >= 0 && inputValue <= 20) {
         console.log("Sending ratingSubmitted message");
         socket.emit('ratingSubmitted', pinCode, user.id, inputValue);
-        console.log("Reset")
         setInputValue('');
         setInputDisabled(true);
       }
@@ -104,7 +108,7 @@ const Ranking = () => {
       <div className="video-player-container">
         <VideoPlayer url={videoURL} />
       </div>
-      <PlayerRanking players={players} rates={rates} videoIndex={videoIndex} />
+      <PlayerRating players={players} rates={rates} videoIndex={videoIndex} />
       <InputText
         placeholder="/20"
         value={inputValue}
