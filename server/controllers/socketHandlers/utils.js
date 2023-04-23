@@ -1,40 +1,42 @@
 const logger = require('../../utils/logger');
+const User = require('../../models/user')
 const Room = require('../../models/room');
 
-const logSocketsInRoom = async (io, roomID) => {
+const logSocketsInRoom = async (io, pinCode) => {
     try {
-        const clients = await io.in(roomID).allSockets();
-        logger.info(`Sockets in room ${roomID}:`, Array.from(clients));
+        const sockets = await io.in(pinCode).allSockets();
+        logger.info(`Sockets in room ${pinCode}:`, Array.from(sockets));
     } catch (error) {
         logger.error('Error:', error);
     }
 };
 
-const getConnectedUsersData = async (room) => {
-    const roomWithUserData = await Room.findOne({ 'pinCode': room.pinCode })
-    .populate({
-        path: 'connectedUsers.user',
-        select: 'username profilePicture'
-    });
+const getConnectedUsersData = async (io, pinCode) => {
+    const sockets = await io.in(pinCode).fetchSockets();
+    const ids = sockets.map((socket) => socket.userId)
 
-    const connectedUsers = roomWithUserData.connectedUsers.map((connected) => ({
+    logger.info("Connected users : ");
+    logger.info(ids);
+
+    const connectedUsers = (await User.find({ '_id': { $in: ids } }, { password: 0 })).map((connected) => ({
         user: {
-            id: connected.user._id,
-            username: connected.user.username,
-            profilePicture: connected.user.profilePicture
+            id: connected._id,
+            username: connected.username,
+            profilePicture: connected.profilePicture
         }
     }));
 
     return connectedUsers
 }
 
-const hasEveryoneRated = async (room) => {
-    const connectedUserIds = room.connectedUsers.map((connected) => connected.user.toString());
+const hasEveryoneRated = async (io, room) => {
+    const sockets = await io.in(room.pinCode).fetchSockets();
+    const ids = sockets.map((socket) => socket.userId)
 
     logger.info("Connected users : ");
-    logger.info(connectedUserIds);
+    logger.info(ids);
 
-    return connectedUserIds.every((userId) => {
+    return ids.every((userId) => {
         const userRate = room.rates.find((rate) => rate.user.toString() === userId);
         if (!userRate) {
             return false;

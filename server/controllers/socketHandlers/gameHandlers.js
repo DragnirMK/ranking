@@ -12,23 +12,25 @@ const handleStartGame = async (io, pinCode, userId) => {
         return;
     }
 
-    if (room.connectedUsers.length > 12) {
+    const connectedUsers = await io.in(room.pinCode).fetchSockets();
+
+    if (connectedUsers.length > 12) {
         logger.info("Too many people in the room")
         return;
     }
 
     room.players = room.players.concat(
-        room.connectedUsers.map((connected) => ({
-            user: connected.user
+        connectedUsers.map((connected) => ({
+            user: connected.userId
         }))
     );
       
     room.rates = room.rates.concat(
-        room.connectedUsers.map((connected) => ({
-            user: connected.user,
+        connectedUsers.map((connected) => ({
+            user: connected.userId,
             videoRates: room.videos.map((_, index) => ({
-            videoIndex: index,
-            rate: -1
+                videoIndex: index,
+                rate: -1
             }))
         }))
     );
@@ -73,8 +75,8 @@ const handleFetchGameState = async (io, pinCode, userId) => {
 
     const room = await Room.findOne({ pinCode })
         .populate({
-        path: 'players.user',
-        select: 'username profilePicture',
+            path: 'players.user',
+            select: 'username profilePicture',
         })
         .populate('createdBy')
 
@@ -121,14 +123,16 @@ const handleRatingSubmitted = async (io, pinCode, userId, rating) => {
         return;
     }
 
-    videoRate.rate = rating;
-    await room.save();
+    if (videoRate.rate == -1) {
+        videoRate.rate = parseInt(rating);
+        await room.save();
+    
+        logger.info("Sending playerRated event")
+    
+        io.to(room.pinCode).emit('playerRated', {rates: room.rates});
+    }
 
-    logger.info("Sending playerRated event")
-
-    io.to(room.pinCode).emit('playerRated', {rates: room.rates});
-
-    const everyoneRated = await hasEveryoneRated(room)
+    const everyoneRated = await hasEveryoneRated(io, room)
 
     if (everyoneRated) {
         logger.info(`Everyone has given a rate for video index ${room.currentVideoIndex} (Room PIN code ${pinCode})`);

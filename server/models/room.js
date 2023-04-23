@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+const playerSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
@@ -35,8 +35,7 @@ const roomSchema = new mongoose.Schema({
   currentVideoIndex: { type: Number, default: 0 },
   pinCode: { type: Number, required: true },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  connectedUsers: [userSchema],
-  players: [userSchema],
+  players: [playerSchema],
   rates: [rateSchema]
 });
 

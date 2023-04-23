@@ -34,8 +34,10 @@ const handleJoinRoom = async (io, socket, pinCode, userId) => {
         return;
     }
 
-    if (room.connectedUsers.length >= 12) {
-        logger.info("Room if full.")
+    const connectedUsers = await io.in(room.pinCode).fetchSockets();
+
+    if (connectedUsers.length >= 12) {
+        logger.info("Room is full")
         return;
     }
 
@@ -60,16 +62,9 @@ const handleJoinRoom = async (io, socket, pinCode, userId) => {
 
     await logSocketsInRoom(io, room.pinCode);
 
-    const playerIndex = room.connectedUsers.findIndex((connected) => connected.user.toString() === userId);
-    if (playerIndex === -1) {
-        logger.info(`User ${userId} is not connected.`);
-        room.connectedUsers.push({user: userId});
-        await room.save();
-    } else {
-        logger.info(`User ${userId} is already connected.`);
-    }
+    const players = await getConnectedUsersData(io, room.pinCode)
 
-    const players = await getConnectedUsersData(room)
+    logger.info(players)
 
     logger.info("Sending playerJoined event")
 
@@ -95,13 +90,7 @@ const handleDisconnection = async (io, socket) => {
 
     await logSocketsInRoom(io, room.pinCode);
 
-    const playerIndex = room.connectedUsers.findIndex((connected) => connected.user.toString() === userId);
-    if (playerIndex !== -1) {
-        room.connectedUsers.splice(playerIndex, 1);
-        await room.save();
-    }
-
-    const players = await getConnectedUsersData(room)
+    const players = await getConnectedUsersData(io, room.pinCode)
 
     logger.info("Sending playerLeft event")
 

@@ -13,8 +13,7 @@ roomsRouter.post('/', async (request, response) => {
   const newRoom = new Room({
     videos,
     pinCode,
-    createdBy,
-    connectedUsers: [{ user: createdBy }]
+    createdBy
   });
 
   try {
