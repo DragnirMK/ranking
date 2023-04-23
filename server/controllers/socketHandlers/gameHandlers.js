@@ -77,7 +77,6 @@ const handleFetchGameState = async (io, pinCode, userId) => {
         select: 'username profilePicture',
         })
         .populate('createdBy')
-        .populate('rates.user');
 
     if (!room) {
         logger.info("No room found");
@@ -90,6 +89,7 @@ const handleFetchGameState = async (io, pinCode, userId) => {
         pinCode,
         createdBy: room.createdBy,
         players: room.players,
+        rates: room.rates,
         videoIndex: room.currentVideoIndex,
         videoTitle: room.videos[room.currentVideoIndex].title,
         videoURL: room.videos[room.currentVideoIndex].url,
@@ -126,7 +126,7 @@ const handleRatingSubmitted = async (io, pinCode, userId, rating) => {
 
     logger.info("Sending playerRated event")
 
-    io.to(room.pinCode).emit('playerRated', userId);
+    io.to(room.pinCode).emit('playerRated', {rates: room.rates});
 
     const everyoneRated = await hasEveryoneRated(room)
 

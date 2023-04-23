@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
+import '../styles/Ranking.css';
 import socket from '../setupSocket';
 import { AuthContext } from '../components/AuthContext';
-import Player from '../components/Player';
-import RatingButton from '../components/RatingButton';
+import PlayerRanking from '../components/PlayerRating';
+import InputText from '../components/InputText';
 import VideoPlayer from '../components/VideoPlayer';
 
 const Ranking = () => {
@@ -11,10 +12,13 @@ const Ranking = () => {
   const { user } = useContext(AuthContext);
 
   const [players, setPlayers] = useState([]);
+  const [rates, setRates] = useState([])
   const [videoIndex, setVideoIndex] = useState(0);
   const [videoTitle, setVideoTitle] = useState("");
   const [videoURL, setVideoURL] = useState("");
   const [numVideos, setNumVideos] = useState(0)
+  const [inputValue, setInputValue] = useState('');
+  const [inputDisabled, setInputDisabled] = useState(false);
 
   const pinCode  = location?.state?.pinCode || null;
 
@@ -27,6 +31,11 @@ const Ranking = () => {
     socket.emit('joinRoom', pinCode, user.id);
   }, [pinCode, user]);
 
+  useEffect(() => {
+    setInputValue('');
+    setInputDisabled(false);
+  }, [videoIndex]);
+
   // Listen for events from the server
   useEffect(() => {
     socket.on('playerJoined', (data) => {
@@ -38,6 +47,7 @@ const Ranking = () => {
     socket.on('gameState', (data) => {
       console.log("gameState event received")
       setPlayers(data.players);
+      setRates(data.rates);
       setVideoIndex(data.videoIndex);
       setVideoTitle(data.videoTitle);
       setVideoURL(data.videoURL);
@@ -46,6 +56,7 @@ const Ranking = () => {
 
     socket.on('playerRated', (data) => {
       console.log("playerRated event received")
+      setRates(data.rates)
     });
 
     socket.on('nextVideo', (data) => {
@@ -68,30 +79,43 @@ const Ranking = () => {
     };
   });
 
-  const handleRatingSubmit = (rating) => {
-    socket.emit('ratingSubmitted', pinCode, user.id, rating);
+  const handleRateChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      if (inputValue >= 0 && inputValue <= 20) {
+        console.log("Sending ratingSubmitted message");
+        socket.emit('ratingSubmitted', pinCode, user.id, inputValue);
+        console.log("Reset")
+        setInputValue('');
+        setInputDisabled(true);
+      }
+    }
   };
 
   return (
     <div className="ranking-container">
       <div className="video-info">
-        <div className="video-index">Video {videoIndex + 1} / {numVideos}</div>
         <div className="video-title">{videoTitle}</div>
+        <div className="video-index">{videoIndex + 1} / {numVideos}</div>
+      </div>
+      <div className="video-player-container">
         <VideoPlayer url={videoURL} />
       </div>
-      <div className="player-list">
-        {players.map((player, index) => (
-          <Player
-            key={player.user.id}
-            player={player}
-            score={player.score}
-            rank={index + 1}
-          />
-        ))}
-      </div>
-      <RatingButton onSubmit={handleRatingSubmit} />
+      <PlayerRanking players={players} rates={rates} videoIndex={videoIndex} />
+      <InputText
+        placeholder="/20"
+        value={inputValue}
+        disabled={inputDisabled}
+        onChange={handleRateChange}
+        onKeyDown={handleKeyDown}
+        className="rating-input"
+      />
     </div>
   );
+
 };
 
 export default Ranking;

@@ -1,0 +1,17 @@
+.video-player {
+    position: relative;
+    width: 750px; /* Set the width */
+    height: 0;
+    padding-bottom: 53.33%;
+    overflow: hidden;
+    margin: 0 auto; /* Center the video */
+}
+
+.video-player iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+  

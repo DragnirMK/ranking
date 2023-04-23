@@ -1,0 +1,56 @@
+.ranking-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .video-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 20px 150px;
+    box-sizing: border-box;
+  }
+  
+  .video-title {
+    font-size: 24px;
+    color: white;
+    text-align: left;
+  }
+  
+  .video-index {
+    font-size: 24px;
+    color: white;
+    text-align: right;
+  }
+  
+  .video-player-container {
+    margin-bottom: 30px; /* Add space between the video player and the PlayerRating component */
+  }
+
+.rating-input::-webkit-outer-spin-button,
+.rating-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.rating-input[type='number'] {
+  -moz-appearance: textfield;
+}
+  
+  
+  
+@media screen and (max-width: 768px) {
+    .video-title {
+        font-size: 1.2rem;
+    }
+
+    .video-index {
+        font-size: 1rem;
+    }
+}
+  

@@ -1,0 +1,29 @@
+.playerRating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    width: 90%;
+    margin-bottom: 20px;
+  }
+  
+.playerRating-grayedOut {
+    filter: grayscale(100%);
+}
+
+.playerRating-circle {
+    width: 50px; /* Increase the width */
+    height: 50px; /* Increase the height */
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 30px; /* Increase the gap between the pictures */
+  }
+
+.playerRating-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+  

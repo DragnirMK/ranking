@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/InputText.css";
 
-const InputText = ({placeholder, type, onChange, className, onKeyDown, size}) => {
+const InputText = ({placeholder, type, onChange, className, onKeyDown, size, disabled, value}) => {
   const inputSizeClass = size === "small" ? "app-input-small" : "";
 
   return (
@@ -11,6 +11,8 @@ const InputText = ({placeholder, type, onChange, className, onKeyDown, size}) =>
       placeholder={placeholder}
       onChange={onChange}
       onKeyDown={onKeyDown}
+      disabled={disabled || false}
+      value={value}
     />
   );
 };

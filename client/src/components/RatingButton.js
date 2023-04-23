@@ -1,32 +1,27 @@
 import React, { useState } from 'react';
+import '../styles/RatingButton.css';
 
 const RatingButton = ({ onSubmit }) => {
   const [rating, setRating] = useState('');
 
-  const handleChange = (e) => {
-    setRating(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    onSubmit(parseFloat(rating));
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(rating);
     setRating('');
   };
 
   return (
-    <div className="rating-input-container">
+    <form onSubmit={handleSubmit}>
       <input
         type="number"
         min="0"
-        max="5"
-        step="0.1"
+        max="20"
         value={rating}
-        onChange={handleChange}
-        placeholder="Rating (0-5)"
+        onChange={(e) => setRating(e.target.value)}
+        className='ratingInput'
       />
-      <button onClick={handleSubmit} disabled={!rating}>
-        Submit Rating
-      </button>
-    </div>
+      <button type="submit">Submit Rating</button>
+    </form>
   );
 };
 
