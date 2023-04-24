@@ -24,4 +24,46 @@ usersRouter.post('/login', async (request, response) => {
     });
 });
 
+usersRouter.post('/signup', async (request, response) => {
+    const body = request.body;
+  
+    const user = await User.findOne({ username: body.username });
+  
+    if (user) {
+      return response.status(409).json({
+        error: 'Username already exists',
+      });
+    }
+  
+    const saltRounds = 10;
+  
+    bcrypt.hash(body.password, saltRounds, async (err, hash) => {
+      if (err) {
+        logger.error(err.message);
+        return response.status(500).send({
+          error: 'Unable to create user at the moment',
+        });
+      }
+  
+      const user = new User({
+        username: body.username,
+        password: hash,
+        profilePicture: body.profilePicture,
+      });
+  
+      try {
+        await user.save();
+        response.status(201).send({
+            message: 'User created.',
+          });
+      } catch (error) {
+        logger.error(error.message);
+        response.status(500).send({
+          error: 'Unable to create user at the moment',
+        });
+      }
+    });
+
+});
+
 module.exports = usersRouter;

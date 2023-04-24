@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 import '../styles/CreateRoomPopup.css';
 import InputText from './InputText';
 import Button from './Button';
@@ -77,17 +78,11 @@ const CreateRoomPopup = ({ onClose }) => {
 
       if (!invalidRow) {
         try {
-          const res = await fetch('/api/rooms/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              videos: rows,
-              createdBy: user.id
-            })
+          const response = await axios.post('/api/rooms/', {
+            videos: rows,
+            createdBy: user.id
           });
-          const data = await res.json();
+          const data = await response.data;
           console.log('Room created in database:', data);
     
           socket.emit('createRoom', data.pinCode, user.id);
@@ -100,7 +95,7 @@ const CreateRoomPopup = ({ onClose }) => {
   const showWarning = () => {
       if (warning) {
           setTimeout(() => {
-          setWarning(null);
+            setWarning(null);
           }, 5000);
       }
 

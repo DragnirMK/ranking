@@ -1,8 +1,14 @@
+.profile-wrapper {
+  display: flex;
+  align-items: center;
+}
+
 .profile-container {
   position: relative;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
+  margin-right: 16px; /* Adjust this value to increase or decrease the space between the elements */
 }
 
 .profile-picture {
@@ -81,4 +87,12 @@
 
 .login-dropdown button {
   width: 100%;
+}
+
+.profile-signup {
+  font-size: 16px;
+  padding: 10px 16px;
+  border-radius: 4px;
+  margin-left: 8px;
+  width: 90px;
 }

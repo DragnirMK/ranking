@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import '../styles/Ranking.css';
 import '../styles/Results.css';
 import PlayerRating from '../components/PlayerRating';
@@ -37,14 +38,10 @@ const Results = () => {
   
     const fetchRoomData = async () => {
       try {
-        const res = await fetch(`/api/rooms/${pinCode}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const room = await res.json();
+        const response = await axios.get(`/api/rooms/${pinCode}`);
+        const room = await response.data;
         console.log('Room exist in database:', room);
+
         setPlayers(room.players);
         setRates(room.rates);
         setResults(room.results);

@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "../styles/Profile.css";
 import Button from './Button';
@@ -12,6 +13,8 @@ const Profile = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [usernameInput, setUsernameInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
+
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -41,6 +44,10 @@ const Profile = () => {
     }
   };
 
+  const handleSignup = () => {
+    navigate('/signup');
+  }
+
   const handleLogout = () => {
     setLoggedIn(false);
     setUser(null);
@@ -51,25 +58,27 @@ const Profile = () => {
   const profilePicture = user ? user.profilePicture : defaultProfilePicture;
 
   return (
-    <div className="profile-container" onClick={toggleDropdown}>
-      <img className="profile-picture" src={profilePicture} alt="Profile" />
-      <span className="username">{username}</span>
-      {showDropdown && (
-        !loggedIn ? (
-          <div className="login-dropdown" onClick={stopPropagation}>
-            <InputText placeholder="Username" value={usernameInput} onChange={e => setUsernameInput(e.target.value)} />
-            <InputText placeholder="Password" type="password" value={passwordInput} onChange={e => setPasswordInput(e.target.value)} />
-            <Button text="Log In" onClick={handleLogin} />
-          </div>
-        ) : (
-          <div className="profile-dropdown" onClick={stopPropagation}>
-            <ul>
-              <li><a href="/settings">Profile Settings</a></li>
-              <li className="signout" onClick={handleLogout}><a href="/">Log Out</a></li>
-            </ul>
-          </div>
-        )
-      )}
+    <div className="profile-wrapper">
+      <div className="profile-container" onClick={toggleDropdown}>
+        <img className="profile-picture" src={profilePicture} alt="Profile" />
+        <span className="username">{username}</span>
+        {showDropdown && (
+          !loggedIn ? (
+            <div className="login-dropdown" onClick={stopPropagation}>
+              <InputText placeholder="Username" value={usernameInput} onChange={e => setUsernameInput(e.target.value)} />
+              <InputText placeholder="Password" type="password" value={passwordInput} onChange={e => setPasswordInput(e.target.value)} />
+              <Button text="Log In" onClick={handleLogin} />
+            </div>
+          ) : (
+            <div className="profile-dropdown" onClick={stopPropagation}>
+              <ul>
+                <li className="signout" onClick={handleLogout}><a href="/">Log Out</a></li>
+              </ul>
+            </div>
+          )
+        )}
+      </div>
+      {!loggedIn && <Button className="profile-signup" text="Sign Up" onClick={handleSignup} />}
     </div>
   );
   

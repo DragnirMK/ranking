@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 import '../styles/Home.css';
 import Button from '../components/Button';
 import InputText from '../components/InputText';
@@ -46,14 +47,8 @@ function Home() {
   };
 
   const handleJoinRoom = async () => {
-    const res = await fetch(`/api/rooms/${pinCode}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
-    const room = await res.json();
-
+    const response = await axios.get(`/api/rooms/${pinCode}`);
+    const room = response.data
     if (room.results.length > 0) {
       navigate('/results', { state: { pinCode: parseInt(pinCode) } });
     } else {
@@ -63,11 +58,11 @@ function Home() {
 
   return (
     <div className="main-container">
-      <h1 className="app-desc">Rank anime openings with your friends Have fun!</h1> {/* Rename class to "app-desc" */}
+      <h1 className="app-desc">Rank YouTube videos with your friends Have fun!</h1>
       <div className="buttons-container">
         <Button text="Create Room" onClick={handleCreateRoom} disabled={!loggedIn} />
         {showCreateRoomPopup && <CreateRoomPopup onClose={handleCloseCreateRoomPopup} />}
-        <div className="or-text">OR</div> {/* Add the "OR" separator */}
+        <div className="or-text">OR</div>
         <InputText placeholder="Enter PIN" value={pinCode} onChange={handlePinCodeChange} />
         <Button text="Join Room" onClick={handleJoinRoom} disabled={!loggedIn} />
       </div>
