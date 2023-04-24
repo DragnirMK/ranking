@@ -2,10 +2,11 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../styles/Ranking.css';
 import '../styles/Results.css';
-import { AuthContext } from '../components/AuthContext';
 import PlayerRating from '../components/PlayerRating';
 import Button from '../components/Button';
 import VideoPlayer from '../components/VideoPlayer';
+import Error from '../components/Error'
+import { AuthContext } from '../components/AuthContext';
 
 const Results = () => {
   const location = useLocation();
@@ -22,12 +23,17 @@ const Results = () => {
   const [videoURL, setVideoURL] = useState("");
   const [numVideos, setNumVideos] = useState(0)
 
+  const [error, setError] = useState(false);
+
   const pinCode  = location?.state?.pinCode || null;
 
   useEffect(() => {
     if (!pinCode || !user) {
+      setError(true);
       return;
     }
+
+    setError(false)
   
     const fetchRoomData = async () => {
       try {
@@ -77,6 +83,10 @@ const Results = () => {
     }
   };
 
+  if (error) {
+    return <Error />
+  } 
+
   return (
     <div className="ranking-container">
       <div className="video-info">
@@ -88,8 +98,8 @@ const Results = () => {
       </div>
       <PlayerRating players={players} rates={rates} videoIndex={videoIndex} show={true} />
       <div className="results-button">
-        <Button text="Previous" onClick={handlePrevVideo} />
-        <Button text="Next" onClick={handleNextVideo} />
+        <Button text="Previous" onClick={handlePrevVideo} disabled={rankingIndex === 0} />
+        <Button text="Next" onClick={handleNextVideo} disabled={rankingIndex === numVideos - 1} />
       </div>
     </div>
   );

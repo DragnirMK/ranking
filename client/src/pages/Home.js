@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-import '../styles/HomePage.css';
+import '../styles/Home.css';
 import Button from '../components/Button';
 import InputText from '../components/InputText';
 import CreateRoomPopup from '../components/CreateRoomPopup';
-import socket from '../setupSocket';
 import { AuthContext } from '../components/AuthContext';
+import socket from '../setupSocket';
 
-function HomePage() {
+function Home() {
   const [pinCode, setPinCode] = useState('');
   const { loggedIn, user } = useContext(AuthContext);
   const [showCreateRoomPopup, setShowCreateRoomPopup] = useState(false);
@@ -75,4 +75,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default Home;

@@ -4,9 +4,8 @@
   align-items: center;
   min-height: 100vh;
   background: linear-gradient(to bottom, #58abf7, #0091ff);
-  font-family: 'Poppins', sans-serif;
-  max-width: 100%; /* Add max-width to prevent overflow */
-  overflow-x: hidden; /* Hide any horizontal overflow */
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .App-header {
@@ -14,12 +13,12 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1200px; /* Set a max-width for the header */
+  max-width: 1200px;
   padding: 16px;
   padding-left: 32px;
   padding-right: 32px;
   background-color: transparent;
-  box-sizing: border-box; /* Ensure padding is included in the width calculation */
+  box-sizing: border-box;
 }
 
 .header-logo {

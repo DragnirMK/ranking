@@ -9,8 +9,8 @@
     width: 400px;
     box-sizing: border-box;
     text-align: center;
-    outline: 2px solid #abc6fd; /* Add a 2px outline with the same color */
-    outline-offset: 2px; /* Add a 2px offset */
+    outline: 2px solid #abc6fd;
+    outline-offset: 2px;
 }
 
 .app-input-small {

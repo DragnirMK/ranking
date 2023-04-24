@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/WaitingRoom.css';
-import socket from '../setupSocket';
-import { AuthContext } from '../components/AuthContext';
 import Player from '../components/Player';
 import PinCode from '../components/PinCode'
 import Button from '../components/Button';
+import Error from '../components/Error'
+import { AuthContext } from '../components/AuthContext';
+import socket from '../setupSocket';
+
 
 const WaitingRoom = () => {
   const location = useLocation();
@@ -15,6 +17,8 @@ const WaitingRoom = () => {
   const [numPlayers, setNumPlayers] = useState(0);
   const [createdBy, setCreatedBy] = useState("")
 
+  const [error, setError] = useState(false);
+
   const pinCode  = location?.state?.pinCode || null;
 
   const navigate = useNavigate();
@@ -22,8 +26,11 @@ const WaitingRoom = () => {
   // Handle joinRoom event (when joining / refreshing the page)
   useEffect(() => {
     if (!pinCode || !user) {
+      setError(true);
       return;
     }
+
+    setError(false)
   
     console.log(user);
     console.log(pinCode);
@@ -70,6 +77,10 @@ const WaitingRoom = () => {
     return user.id === createdBy;
   };
 
+  if (error) {
+    return <Error />
+  } 
+
   return (
     <div className="waiting-room-background">
       <div className="waiting-room-container">
@@ -90,7 +101,7 @@ const WaitingRoom = () => {
                 className="start-button"
                 text="Start"
                 onClick={() => handleStart(user)}
-                disabled={numPlayers < 2}
+                disabled={numPlayers < 2 || !isHost(user)}
               />
             </>
           )}

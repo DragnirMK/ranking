@@ -1,9 +1,24 @@
 const logger = require('./logger')
 
+const omitSensitiveFields = (body) => {
+  const sensitiveFields = ['password'];
+  const cleanedBody = { ...body };
+
+  sensitiveFields.forEach((field) => {
+    if (cleanedBody.hasOwnProperty(field)) {
+      cleanedBody[field] = '*****';
+    }
+  });
+
+  return cleanedBody;
+};
+
 const requestLogger = (request, response, next) => {
+  const cleanedBody = omitSensitiveFields(request.body);
+
   logger.info('Method:', request.method)
   logger.info('Path:  ', request.path)
-  logger.info('Body:  ', request.body)
+  logger.info('Body:  ', cleanedBody)
   logger.info('---')
   next()
 }

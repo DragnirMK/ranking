@@ -24,7 +24,7 @@ const handleStartGame = async (io, pinCode, userId) => {
             user: connected.userId
         }))
     );
-      
+
     room.rates = room.rates.concat(
         connectedUsers.map((connected) => ({
             user: connected.userId,

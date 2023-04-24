@@ -50,7 +50,6 @@ roomsRouter.get('/:pinCode', async (request, response) => {
           profilePicture: player.user.profilePicture
       }
     }));
-    logger.info(roomObject.players)
     response.json(roomObject);
   } catch (error) {
     logger.error('Error getting game:', error);

@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
 import axios from 'axios';
 import "../styles/Profile.css";
-import defaultProfilePicture from "../assets/default_pp.png";
-import { AuthContext } from './AuthContext';
 import Button from './Button';
 import InputText from './InputText';
+import { AuthContext } from './AuthContext';
+import defaultProfilePicture from "../assets/default_pp.png";
 
 const Profile = () => {
   const { loggedIn, setLoggedIn, user, setUser } = useContext(AuthContext);

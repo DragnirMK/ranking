@@ -1,6 +1,5 @@
 const logger = require('../../utils/logger');
 const User = require('../../models/user')
-const Room = require('../../models/room');
 
 const logSocketsInRoom = async (io, pinCode) => {
     try {

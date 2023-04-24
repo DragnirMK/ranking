@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import '../styles/CreateRoomPopup.css';
 import InputText from './InputText';
 import Button from './Button';
+import { AuthContext } from './AuthContext';
 import socket from '../setupSocket';
-import { AuthContext } from '../components/AuthContext';
 
 const CreateRoomPopup = ({ onClose }) => {
   const [rows, setRows] = useState([{ title: '', url: '' }]);

@@ -55,7 +55,7 @@
 
 .table-container {
     overflow-y: auto;
-    max-height: calc(80vh - 70px); /* Subtract the estimated height of the title and the button */
+    max-height: calc(80vh - 70px);
 }
 
 .warning-message {

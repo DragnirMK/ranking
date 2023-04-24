@@ -2,7 +2,6 @@ import React from 'react';
 import '../styles/PlayerRating.css';
 
 const PlayerRating = ({ players, rates, videoIndex, show }) => {
-  console.log(players)
   const hasRated = (player) => {
     const playerRates = rates.find((rate) => rate.user === player.user.id);
     if (playerRates) {

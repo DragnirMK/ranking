@@ -29,7 +29,7 @@
   }
   
   .video-player-container {
-    margin-bottom: 30px; /* Add space between the video player and the PlayerRating component */
+    margin-bottom: 30px;
   }
 
 .rating-input::-webkit-outer-spin-button,

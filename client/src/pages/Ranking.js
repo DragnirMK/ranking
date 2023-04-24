@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/Ranking.css';
-import socket from '../setupSocket';
-import { AuthContext } from '../components/AuthContext';
 import PlayerRating from '../components/PlayerRating';
 import InputText from '../components/InputText';
 import VideoPlayer from '../components/VideoPlayer';
+import Error from '../components/Error'
+import { AuthContext } from '../components/AuthContext';
+import socket from '../setupSocket';
 
 const Ranking = () => {
   const location = useLocation();
@@ -24,13 +25,18 @@ const Ranking = () => {
   const [inputValue, setInputValue] = useState('');
   const [inputDisabled, setInputDisabled] = useState(false);
 
+  const [error, setError] = useState(false);
+
   const pinCode  = location?.state?.pinCode || null;
 
   // Fetch the ranking data and current video from the server when the component mounts
   useEffect(() => {
     if (!pinCode || !user) {
+      setError(true);
       return;
     }
+
+    setError(false)
 
     socket.emit('joinRoom', pinCode, user.id);
   }, [pinCode, user]);
@@ -98,6 +104,10 @@ const Ranking = () => {
       }
     }
   };
+
+  if (error) {
+    return <Error />
+  }
 
   return (
     <div className="ranking-container">
