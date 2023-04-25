@@ -17,6 +17,8 @@ const WaitingRoom = () => {
   const [numPlayers, setNumPlayers] = useState(0);
   const [createdBy, setCreatedBy] = useState("")
 
+  const [blockStartButton, setBlockStartButton] = useState(false);
+
   const [error, setError] = useState(false);
 
   const pinCode  = location?.state?.pinCode || null;
@@ -68,8 +70,9 @@ const WaitingRoom = () => {
   });
 
   const handleStart = (user) => {
-    if (isHost(user)) {
+    if (isHost(user) && !blockStartButton) {
       socket.emit('startGame', pinCode, user.id);
+      setBlockStartButton(true)
     }
   };
 

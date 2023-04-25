@@ -1,6 +1,7 @@
 const config = require('./utils/config');
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const mongoose = require('mongoose');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -40,6 +41,17 @@ app.use(middleware.requestLogger);
 
 app.use('/api/users', usersRouter);
 app.use('/api/rooms', roomsRouter);
+
+const allowedRoutes = ['/', '/ranking', '/waitingroom', '/results', '/signup'];
+
+app.get('*', (req, res) => {
+  if (allowedRoutes.includes(req.url)) {
+    // Allow refresh
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  } else {
+    middleware.unknownEndpoint(req, res);
+  }
+});
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);

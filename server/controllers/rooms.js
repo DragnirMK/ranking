@@ -25,17 +25,6 @@ roomsRouter.post('/', async (request, response) => {
   }
 });
 
-
-roomsRouter.get('/', async (request, response) => {
-  try {
-    const rooms = await Room.find();
-    response.json(rooms);
-  } catch (err) {
-    logger.error(err);
-    res.status(500).send('Server Error');
-  }
-});
-
 roomsRouter.get('/:pinCode', async (request, response) => {
   const { pinCode } = request.params;
 

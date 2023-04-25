@@ -69,11 +69,10 @@ const handleUpdateGameState = async (io, room) => {
         const sortedVideos = averageVideos.sort((a, b) => a.average - b.average);
 
         room.results = sortedVideos;
-        await room.save();
-
-        logger.info("Sending gameEnded event")
-
-        io.to(room.pinCode).emit('gameEnded');
+        room.save().then(() => {
+            logger.info("Sending gameEnded event");
+            io.to(room.pinCode).emit('gameEnded');
+        });
     }
 }
 

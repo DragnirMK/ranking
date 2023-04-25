@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Ranking.css';
 import '../styles/Results.css';
@@ -11,6 +11,7 @@ import { AuthContext } from '../components/AuthContext';
 
 const Results = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
   const [players, setPlayers] = useState([]);
@@ -46,6 +47,7 @@ const Results = () => {
         setRates(room.rates);
         setResults(room.results);
         setRankingIndex(0)
+        setVideoIndex(room.results[0].videoIndex)
         setVideoTitle(room.results[0].title);
         setVideoURL(room.results[0].url);
         setNumVideos(room.results.length);
@@ -80,6 +82,12 @@ const Results = () => {
     }
   };
 
+  const handleReturnHome = () => {
+    navigate('/');
+  };
+
+  const isLastVideo = rankingIndex === numVideos - 1;
+
   if (error) {
     return <Error />
   } 
@@ -96,7 +104,7 @@ const Results = () => {
       <PlayerRating players={players} rates={rates} videoIndex={videoIndex} show={true} />
       <div className="results-button">
         <Button text="Previous" onClick={handlePrevVideo} disabled={rankingIndex === 0} />
-        <Button text="Next" onClick={handleNextVideo} disabled={rankingIndex === numVideos - 1} />
+        <Button text={isLastVideo ? "Return Home" : "Next"} onClick={isLastVideo ? handleReturnHome : handleNextVideo} />
       </div>
     </div>
   );

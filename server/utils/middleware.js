@@ -24,7 +24,7 @@ const requestLogger = (request, response, next) => {
 }
 
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
+  response.status(404).send({ error: "Error : This page doesn't exist"})
 }
 
 const errorHandler = (error, request, response, next) => {
