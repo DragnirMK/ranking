@@ -17,9 +17,18 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false NODE_ENV=dev react-scripts build",
+    "build:prod": "GENERATE_SOURCEMAP=false NODE_ENV=prod react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "env": {
+    "dev": {
+      "SETUP_URL": "http://localhost:3001"
+    },
+    "prod": {
+      "SETUP_URL": "https://rankingu.fly.dev"
+    }
   },
   "eslintConfig": {
     "extends": [
