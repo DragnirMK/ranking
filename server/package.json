@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node index.js",
     "test": "node tests/testDb.js",
-    "build": "rm -rf build/ && cd ../client && rm -rf build/ && npm run build && cp -R build ../server"
+    "clean:client": "cd ../client/ && rm -rf build && cd ../server",
+    "clean:server": "rm -rf build",
+    "clean:all": "npm run clean:client && npm run clean:server",
+    "build:ui": "cd ../client/ && npm run build && cp -R build ../server && cd ../server && npm run clean:client",
+    "start:prod": "npm run clean:all && npm run build:ui"
   },
   "author": "",
   "license": "ISC",
