@@ -58,7 +58,11 @@ function Home() {
 
   return (
     <div className="main-container">
-      <h1 className="app-desc">Rank YouTube videos with your friends Have fun!</h1>
+      <h1 className="app-desc">
+        Rank YouTube videos with your friends
+        <br/>
+        Have fun !
+      </h1>
       <div className="buttons-container">
         <Button text="Create Room" onClick={handleCreateRoom} disabled={!loggedIn} />
         {showCreateRoomPopup && <CreateRoomPopup onClose={handleCloseCreateRoomPopup} />}

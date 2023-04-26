@@ -62,5 +62,14 @@
     margin-top: 10px;
     text-align: center;
     font-weight: bold;
-  }
+}
+
+@media screen and (max-width: 768px) {
+    .create-room-popup {
+        font-size: 1rem;
+    }
+    .create-room-table {
+        font-size: 0.8rem;
+    }
+}
   

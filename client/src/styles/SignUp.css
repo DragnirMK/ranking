@@ -21,4 +21,10 @@
     flex-direction: column;
     align-items: center;
 }
+
+@media screen and (max-width: 768px) {
+    .signup-title {
+        font-size: 1.2rem;
+    }
+}
   

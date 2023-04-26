@@ -8,7 +8,7 @@
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-  margin-right: 16px; /* Adjust this value to increase or decrease the space between the elements */
+  margin-right: 16px;
 }
 
 .profile-picture {
@@ -95,4 +95,33 @@
   border-radius: 4px;
   margin-left: 8px;
   width: 90px;
+}
+
+@media screen and (max-width: 768px) {
+  .profile-container {
+    margin-right: 0;
+    width: 80%
+  }
+  
+  .login-dropdown, .profile-dropdown {
+    top: 100%;
+    right: 50%;
+    transform: translateX(50%);
+    min-width: 140px;
+  }
+  
+  .login-dropdown input, .login-dropdown button {
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  .profile-signup {
+    font-size: 14px;
+    padding: 10px 10px;
+    border-radius: 4px;
+    margin-left: 8px;
+    width: 90px;
+  }
 }

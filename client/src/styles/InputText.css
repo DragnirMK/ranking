@@ -13,10 +13,17 @@
     outline-offset: 2px;
 }
 
+@media screen and (max-width: 768px) {
+  .app-input {
+      font-size: 18px;
+      max-width: 200px;
+  }
+}
+  
 .app-input-small {
     width: 100%;
     padding: 4px 8px;
     font-size: 14px;
     box-sizing: border-box;
-  }
+}
   

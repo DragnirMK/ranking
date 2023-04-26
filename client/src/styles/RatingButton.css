@@ -3,4 +3,11 @@
     text-align: center;
     margin-right: 5px;
 }
+
+@media screen and (max-width: 768px) {
+    .ratingInput {
+      width: 40px;
+    }
+  }
+  
   

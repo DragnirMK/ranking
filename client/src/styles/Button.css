@@ -12,7 +12,14 @@
     outline: 2px solid #aeb296;
     outline-offset: 2px;
 }
-
+  
+@media screen and (max-width: 768px) {
+    .app-btn {
+        font-size: 20px;
+        max-width: 200px;
+    }
+}
+  
 .app-btn:hover {
     background-color: #d9a103;
     transition: background-color 0.2s ease;
@@ -28,7 +35,7 @@
     color: #999999;
     cursor: not-allowed;
 }
-  
+
 .app-btn-disabled:hover {
     background-color: #cccccc;
     transition: none;

@@ -50,4 +50,14 @@
     .video-index {
         font-size: 1rem;
     }
+
+    .ranking-container {
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+  
+    .video-info {
+      padding: 20px 10px;
+    }
 }
+
