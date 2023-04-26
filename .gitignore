@@ -1,6 +1,9 @@
 .vscode
 client/node_modules
 client/build
+client/.DS_Store
+client/public/.DS_Store
+client/src/.DS_Store
 server/node_modules
 server/build
 server/.env
