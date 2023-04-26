@@ -88,6 +88,14 @@ const Results = () => {
 
   const isLastVideo = rankingIndex === numVideos - 1;
 
+  const getMedalEmoji = () => {
+    const rank = numVideos - rankingIndex;
+    if (rank === 1) return '🥇';
+    if (rank === 2) return '🥈';
+    if (rank === 3) return '🥉';
+    return '';
+  };
+
   if (error) {
     return <Error />
   } 
@@ -95,7 +103,7 @@ const Results = () => {
   return (
     <div className="ranking-container">
       <div className="video-info">
-        <div className="video-title">{videoTitle}</div>
+        <div className="video-title">{videoTitle} {getMedalEmoji()}</div>
         <div className="video-index">{numVideos - rankingIndex} / {numVideos}</div>
       </div>
       <div className="video-player-container">
